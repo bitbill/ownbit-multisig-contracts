@@ -24,12 +24,12 @@ contract BitbillMultiSig9 {
   // owners of M of these addresses will need to both sign a message
   // allowing the funds in this contract to be spent.
   mapping(address => bool) private isOwner;
-  address[] public owners;
-  uint public required;
+  address[] private owners;
+  uint private required;
 
   // The contract nonce is not accessible to the contract so we
   // implement a nonce-like variable for replay protection.
-  uint256 public spendNonce = 0;
+  uint256 private spendNonce = 0;
   
   // An event sent when funds are received.
   event Funded(uint new_balance);
@@ -77,6 +77,14 @@ contract BitbillMultiSig9 {
     {
         return owners;
     }
+    
+    function getSpendNonce()
+        public
+        constant
+        returns (uint256)
+    {
+        return spendNonce;
+    }
 
   // Generates the message to sign given the output destination address and amount.
   // includes this contract's address and a nonce for replay protection.
@@ -99,6 +107,7 @@ contract BitbillMultiSig9 {
     require(this.balance >= value);
     require(_validSignature(destination, value, vs, rs, ss));
     spendNonce = spendNonce + 1;
+    //transfer will throw if fails
     destination.transfer(value);
     Spent(destination, value);
   }
@@ -130,14 +139,11 @@ contract BitbillMultiSig9 {
         //or not the owner
         if (!isOwner[addrs[i]])
             throw;
-    }
-    for (uint j=0; j<addrs.length; j++) {
-        for (uint k=0; k<addrs.length; k++) {
-            if (addrs[j]==addrs[k] && j!=k)
+        for (uint j=0; j<i; j++) {
+            if (addrs[i]==addrs[j])
                 throw;
         }
     }
-    
     return true;
   }
 }
