@@ -85,6 +85,14 @@ contract BitbillMultiSig9 {
     {
         return spendNonce;
     }
+    
+    function getRequired()
+        public
+        constant
+        returns (uint)
+    {
+        return required;
+    }
 
   // Generates the message to sign given the output destination address and amount.
   // includes this contract's address and a nonce for replay protection.
