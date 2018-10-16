@@ -112,9 +112,9 @@ contract BitbillMultiSig9 {
   function spend(address destination, uint256 value, uint8[] vs, bytes32[] rs, bytes32[] ss) public {
     // This require is handled by generateMessageToSign()
     // require(destination != address(this));
-    require(this.balance >= value);
     require(_validSignature(destination, value, vs, rs, ss));
     spendNonce = spendNonce + 1;
+    require(this.balance >= value);
     //transfer will throw if fails
     destination.transfer(value);
     Spent(destination, value);
