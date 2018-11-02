@@ -17,6 +17,18 @@ pragma solidity ^0.4.21;
 // INFO: This contract is ERC20 compatible.
 // This contract can both receive ETH and ERC20 tokens.
 //
+contract ERC20Interface {
+    function totalSupply() public constant returns (uint);
+    function balanceOf(address tokenOwner) public constant returns (uint balance);
+    function allowance(address tokenOwner, address spender) public constant returns (uint remaining);
+    function transfer(address to, uint tokens) public returns (bool success);
+    function approve(address spender, uint tokens) public returns (bool success);
+    function transferFrom(address from, address to, uint tokens) public returns (bool success);
+
+    event Transfer(address indexed from, address indexed to, uint tokens);
+    event Approval(address indexed tokenOwner, address indexed spender, uint tokens);
+}
+
 contract BitbillMultiSig9 {
     
     uint constant public MAX_OWNER_COUNT = 9;
@@ -37,6 +49,10 @@ contract BitbillMultiSig9 {
   
   // An event sent when a spend is triggered to the given address.
   event Spent(address to, uint transfer);
+  
+  // An event sent when a spend is triggered to the given address.
+  event SpentERC20(address erc20contract, address to, uint transfer);
+
   
   modifier validRequirement(uint ownerCount, uint _required) {
         if (   ownerCount > MAX_OWNER_COUNT
@@ -110,15 +126,30 @@ contract BitbillMultiSig9 {
     return keccak256(prefix,hashedUnsignedMessage);
   }
   
-  function spend(address destination, uint256 value, uint8[] vs, bytes32[] rs, bytes32[] ss) public {
+  // @erc20contract: the erc20 contract address, 0 when transfer ether.
+  // @destination: the token or ether receiver address.
+  // @value: the token or ether value, in wei or token minimum unit.
+  // @vs, rs, ss: the signatures
+  function spend(address erc20contract, address destination, uint256 value, uint8[] vs, bytes32[] rs, bytes32[] ss) public {
     // This require is handled by generateMessageToSign()
     // require(destination != address(this));
-    require(this.balance >= value);
-    require(_validSignature(destination, value, vs, rs, ss));
-    spendNonce = spendNonce + 1;
-    //transfer will throw if fails
-    destination.transfer(value);
-    Spent(destination, value);
+    if(erc20contract == 0){
+        //tranfer ether
+        require(this.balance >= value);
+        require(_validSignature(destination, value, vs, rs, ss));
+        spendNonce = spendNonce + 1;
+        //transfer will throw if fails
+        destination.transfer(value);
+        Spent(destination, value);
+    }else{
+        //transfer erc20 token
+        require(_validSignature(destination, value, vs, rs, ss));
+        spendNonce = spendNonce + 1;
+        ERC20Interface(erc20contract).approve(destination, value);
+        // transfer the tokens from the sender to this contract
+        ERC20Interface(erc20contract).transferFrom(address(this), destination, value);
+        SpentERC20(erc20contract, destination, value);
+    }
   }
 
   // Confirm that the signature triplets (v1, r1, s1) (v2, r2, s2) ...
