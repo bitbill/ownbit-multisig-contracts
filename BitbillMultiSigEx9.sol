@@ -29,7 +29,7 @@ contract ERC20Interface {
     event Approval(address indexed tokenOwner, address indexed spender, uint tokens);
 }
 
-contract BitbillMultiSig9 {
+contract BitbillMultiSigEx9 {
     
     uint constant public MAX_OWNER_COUNT = 9;
 
@@ -66,7 +66,7 @@ contract BitbillMultiSig9 {
   /// @dev Contract constructor sets initial owners and required number of confirmations.
     /// @param _owners List of initial owners.
     /// @param _required Number of required confirmations.
-    function BitbillMultiSig9(address[] _owners, uint _required)
+    function BitbillMultiSigEx9(address[] _owners, uint _required)
         public
         validRequirement(_owners.length, _required)
     {
