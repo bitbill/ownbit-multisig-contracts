@@ -130,7 +130,7 @@ contract BitbillMultiSigEx9 {
   // @destination: the token or ether receiver address.
   // @value: the token or ether value, in wei or token minimum unit.
   // @vs, rs, ss: the signatures
-  function spend(address erc20contract, address destination, uint256 value, uint8[] vs, bytes32[] rs, bytes32[] ss) public {
+  function spend(address destination, address erc20contract, uint256 value, uint8[] vs, bytes32[] rs, bytes32[] ss) public {
     // This require is handled by generateMessageToSign()
     // require(destination != address(this));
     if(erc20contract == 0){
