@@ -1,4 +1,3 @@
-
 pragma solidity ^0.4.21;
 
 // This is a ETH/ERC20 multisig contract for BITBILL.
@@ -17,6 +16,8 @@ pragma solidity ^0.4.21;
 // INFO: This contract is ERC20 compatible.
 // This contract can both receive ETH and ERC20 tokens.
 //
+contract ERC20Token { function transfer(address receiver, uint amount); } 
+/*
 contract ERC20Interface {
     function totalSupply() public constant returns (uint);
     function balanceOf(address tokenOwner) public constant returns (uint balance);
@@ -28,6 +29,7 @@ contract ERC20Interface {
     event Transfer(address indexed from, address indexed to, uint tokens);
     event Approval(address indexed tokenOwner, address indexed spender, uint tokens);
 }
+*/
 
 contract BitbillMultiSigEx9 {
     
@@ -145,9 +147,9 @@ contract BitbillMultiSigEx9 {
         //transfer erc20 token
         require(_validSignature(destination, value, vs, rs, ss));
         spendNonce = spendNonce + 1;
-        ERC20Interface(erc20contract).approve(destination, value);
         // transfer the tokens from the sender to this contract
-        ERC20Interface(erc20contract).transferFrom(address(this), destination, value);
+        //SpentERC20(erc20contract, destination, ERC20Interface(erc20contract).balanceOf(address(this)));
+        ERC20Token(erc20contract).transfer(destination, value);
         SpentERC20(erc20contract, destination, value);
     }
   }
