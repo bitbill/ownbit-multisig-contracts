@@ -128,30 +128,31 @@ contract BitbillMultiSigEx9 {
     return keccak256(prefix,hashedUnsignedMessage);
   }
   
+  function spend(address destination, uint256 value, uint8[] vs, bytes32[] rs, bytes32[] ss) public {
+    // This require is handled by generateMessageToSign()
+    // require(destination != address(this));
+    require(this.balance >= value);
+    require(_validSignature(destination, value, vs, rs, ss));
+    spendNonce = spendNonce + 1;
+    //transfer will throw if fails
+    destination.transfer(value);
+    Spent(destination, value);
+  }
+  
   // @erc20contract: the erc20 contract address, 0 when transfer ether.
   // @destination: the token or ether receiver address.
   // @value: the token or ether value, in wei or token minimum unit.
   // @vs, rs, ss: the signatures
-  function spend(address destination, address erc20contract, uint256 value, uint8[] vs, bytes32[] rs, bytes32[] ss) public {
+  function spendERC20(address destination, address erc20contract, uint256 value, uint8[] vs, bytes32[] rs, bytes32[] ss) public {
     // This require is handled by generateMessageToSign()
     // require(destination != address(this));
-    if(erc20contract == 0){
-        //tranfer ether
-        require(this.balance >= value);
-        require(_validSignature(destination, value, vs, rs, ss));
-        spendNonce = spendNonce + 1;
-        //transfer will throw if fails
-        destination.transfer(value);
-        Spent(destination, value);
-    }else{
-        //transfer erc20 token
-        require(_validSignature(destination, value, vs, rs, ss));
-        spendNonce = spendNonce + 1;
-        // transfer the tokens from the sender to this contract
-        //SpentERC20(erc20contract, destination, ERC20Interface(erc20contract).balanceOf(address(this)));
-        ERC20Token(erc20contract).transfer(destination, value);
-        SpentERC20(erc20contract, destination, value);
-    }
+    //transfer erc20 token
+    require(_validSignature(destination, value, vs, rs, ss));
+    spendNonce = spendNonce + 1;
+    // transfer the tokens from the sender to this contract
+    //SpentERC20(erc20contract, destination, ERC20Interface(erc20contract).balanceOf(address(this)));
+    ERC20Token(erc20contract).transfer(destination, value);
+    SpentERC20(erc20contract, destination, value);
   }
 
   // Confirm that the signature triplets (v1, r1, s1) (v2, r2, s2) ...
