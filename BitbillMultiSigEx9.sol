@@ -55,7 +55,6 @@ contract BitbillMultiSigEx9 {
   // An event sent when a spend is triggered to the given address.
   event SpentERC20(address erc20contract, address to, uint transfer);
 
-  
   modifier validRequirement(uint ownerCount, uint _required) {
         if (   ownerCount > MAX_OWNER_COUNT
             || _required > ownerCount
@@ -139,7 +138,7 @@ contract BitbillMultiSigEx9 {
     Spent(destination, value);
   }
   
-  // @erc20contract: the erc20 contract address, 0 when transfer ether.
+  // @erc20contract: the erc20 contract address.
   // @destination: the token or ether receiver address.
   // @value: the token or ether value, in wei or token minimum unit.
   // @vs, rs, ss: the signatures
@@ -147,10 +146,10 @@ contract BitbillMultiSigEx9 {
     // This require is handled by generateMessageToSign()
     // require(destination != address(this));
     //transfer erc20 token
+    //require(ERC20Interface(erc20contract).balanceOf(address(this)) >= value);
     require(_validSignature(destination, value, vs, rs, ss));
     spendNonce = spendNonce + 1;
     // transfer the tokens from the sender to this contract
-    //SpentERC20(erc20contract, destination, ERC20Interface(erc20contract).balanceOf(address(this)));
     ERC20Token(erc20contract).transfer(destination, value);
     SpentERC20(erc20contract, destination, value);
   }
