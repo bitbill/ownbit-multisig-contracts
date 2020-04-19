@@ -1,6 +1,6 @@
 pragma solidity ^0.4.21;
 
-// This is a ETH/ERC20 multisig contract for BITBILL.
+// This is the ETH/ERC20 multisig contract for BITBILL.
 //
 // For 2-of-3 multisig, to authorize a spend, two signtures must be provided by 2 of the 3 owners.
 // To generate the message to be signed, provide the destination address and
