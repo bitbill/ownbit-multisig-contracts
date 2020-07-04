@@ -1,6 +1,6 @@
 pragma solidity ^0.4.21;
 
-// This is the ETH/ERC20 multisig contract for BITBILL.
+// This is the ETH/ERC20 multisig contract for Ownbit.
 //
 // For 2-of-3 multisig, to authorize a spend, two signtures must be provided by 2 of the 3 owners.
 // To generate the message to be signed, provide the destination address and
@@ -76,10 +76,7 @@ contract OwnbitMultiSig {
   /// @dev Contract constructor sets initial owners and required number of confirmations.
     /// @param _owners List of initial owners.
     /// @param _required Number of required confirmations.
-    function OwnbitMultiSig(address[] _owners, uint _required)
-        public
-        validRequirement(_owners.length, _required)
-    {
+    function OwnbitMultiSig(address[] _owners, uint _required) public validRequirement(_owners.length, _required) {
         for (uint i=0; i<_owners.length; i++) {
             if (isOwner[_owners[i]] || _owners[i] == 0)
                 throw;
@@ -90,34 +87,22 @@ contract OwnbitMultiSig {
     }
 
 
-  // The fallback function for this contract.
-  function() public payable {
-    Funded(this.balance);
-  }
+    // The fallback function for this contract.
+    function() public payable {
+        Funded(this.balance);
+    }
   
     /// @dev Returns list of owners.
     /// @return List of owner addresses.
-    function getOwners()
-        public
-        constant
-        returns (address[])
-    {
+    function getOwners() public constant returns (address[]) {
         return owners;
     }
     
-    function getSpendNonce()
-        public
-        constant
-        returns (uint256)
-    {
+    function getSpendNonce() public constant returns (uint256) {
         return spendNonce;
     }
     
-    function getRequired()
-        public
-        constant
-        returns (uint)
-    {
+    function getRequired() public constant returns (uint) {
         return required;
     }
 
@@ -164,11 +149,7 @@ contract OwnbitMultiSig {
     SpentERC20(erc20contract, destination, value);
   }
   
-  function supplyEthToCompound(address payable _cEtherContract, uint256 value, uint8[] vs, bytes32[] rs, bytes32[] ss)
-        public
-        payable
-        returns (bool)
-    {
+  function supplyEthToCompound(address payable _cEtherContract, uint256 value, uint8[] vs, bytes32[] rs, bytes32[] ss) public payable returns (bool) {
         require(_validSignature(0x0000000000000000000000000000000000000000, _cEtherContract, 0x01, value, vs, rs, ss));
         spendNonce = spendNonce + 1;
         // Create a reference to the corresponding cToken contract
