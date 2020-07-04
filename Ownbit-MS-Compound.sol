@@ -32,7 +32,6 @@ interface CErc20 {
     function redeemUnderlying(uint) external returns (uint);
 }
 
-
 interface CEth {
     function mint() external payable;
 
