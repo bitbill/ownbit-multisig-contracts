@@ -125,7 +125,7 @@ contract OwnbitMultiSig {
   function spend(address destination, uint256 value, uint8[] vs, bytes32[] rs, bytes32[] ss) public {
     // This require is handled by generateMessageToSign()
     // require(destination != address(this));
-    require(this.balance >= value);
+    require(address(this).balance >= value);
     require(_validSignature(0x0000000000000000000000000000000000000000, destination, value, 0x00, vs, rs, ss));
     spendNonce = spendNonce + 1;
     //transfer will throw if fails
@@ -148,71 +148,48 @@ contract OwnbitMultiSig {
     Erc20(erc20contract).transfer(destination, value);
     emit SpentErc20(erc20contract, destination, value);
   }
-  
-  function supplyEthToCompound(address _cEtherContract, uint256 value, uint8[] vs, bytes32[] rs, bytes32[] ss) public payable returns (bool) {
-        require(_validSignature(0x0000000000000000000000000000000000000000, _cEtherContract, value, 0x01, vs, rs, ss));
-        spendNonce = spendNonce + 1;
-        // Create a reference to the corresponding cToken contract
-        CEth cToken = CEth(_cEtherContract);
-        cToken.mint.value(value).gas(250000)();
-        return true;
-    }
 
-    function supplyErc20ToCompound(address _erc20Contract, address _cErc20Contract, uint256 value, uint8[] vs, bytes32[] rs, bytes32[] ss) public returns (uint) {
-        require(_validSignature(0x0000000000000000000000000000000000000000, _cErc20Contract, value, 0x01, vs, rs, ss));
-        spendNonce = spendNonce + 1;
-        // Create a reference to the underlying asset contract, like DAI.
-        Erc20 underlying = Erc20(_erc20Contract);
-        // Create a reference to the corresponding cToken contract, like cDAI
-        CErc20 cToken = CErc20(_cErc20Contract);
-        // Approve transfer on the ERC20 contract
-        underlying.approve(_cErc20Contract, value);
-        // Mint cTokens
-        uint mintResult = cToken.mint(value);
-        return mintResult;
-    }
-    
-    function redeemCEth(address _cEtherContract, uint256 value, uint8 purpose, uint8[] vs, bytes32[] rs, bytes32[] ss) public returns (bool) {
-        require(_validSignature(0x0000000000000000000000000000000000000000, _cEtherContract, value, purpose, vs, rs, ss));
-        spendNonce = spendNonce + 1;
-        // Create a reference to the corresponding cToken contract
-        CEth cToken = CEth(_cEtherContract);
-        uint256 redeemResult;
-        if (purpose == 0x03) {
-            // Retrieve your asset based on an amount of the asset
-            redeemResult = cToken.redeemUnderlying(value);
-        } else {
-            // Retrieve your asset based on a cToken amount
-            redeemResult = cToken.redeem(value);
-        }
-        return true;
-    }
-    
-    function redeemCErc20Tokens(address _cErc20Contract, uint256 value, uint8 purpose, uint8[] vs, bytes32[] rs, bytes32[] ss) public returns (bool) {
+
+  //purpose is uint8:
+  //0x00: normal send
+  //0x01: Compound supply ETH
+  //0x02: Compound supply ERC20
+  //0x03: Compound redeem ETH
+  //0x04: Compound redeem ERC20
+    //for ETH, 0x0000000000000000000000000000000000000000 is passed as _erc20Contract
+    function compoundAction(address _erc20Contract, address _cErc20Contract, uint256 value, uint8 purpose, uint8[] vs, bytes32[] rs, bytes32[] ss) public {
         require(_validSignature(0x0000000000000000000000000000000000000000, _cErc20Contract, value, purpose, vs, rs, ss));
         spendNonce = spendNonce + 1;
-        // Create a reference to the corresponding cToken contract, like cDAI
-        CErc20 cToken = CErc20(_cErc20Contract);
-        uint256 redeemResult;
-        if (purpose == 0x03) {
-            // Retrieve your asset based on an amount of the asset
-            redeemResult = cToken.redeemUnderlying(value);
-        } else {
-            // Retrieve your asset based on a cToken amount
-            redeemResult = cToken.redeem(value);
+        
+        if (purpose == 0x01) {
+            //supply ETH
+            CEth cToken1 = CEth(_cErc20Contract);
+            cToken1.mint.value(value).gas(250000)();
+        } else if (purpose == 0x02) {
+            //supply ERC20
+            // Create a reference to the underlying asset contract, like DAI.
+            Erc20 underlying = Erc20(_erc20Contract);
+            // Create a reference to the corresponding cToken contract, like cDAI
+            CErc20 cToken2 = CErc20(_cErc20Contract);
+            // Approve transfer on the ERC20 contract
+            underlying.approve(_cErc20Contract, value);
+            // Mint cTokens
+            cToken2.mint(value);
+        } else if (purpose == 0x03) {
+            //redeem ETH
+            CEth cToken3 = CEth(_cErc20Contract);
+            cToken3.redeem(value);
+        } else if (purpose == 0x04) {
+            //redeem ETH
+            CErc20 cToken4 = CErc20(_cErc20Contract);
+            cToken4.redeem(value);
         }
-        return true;
     }
     
 
   // Confirm that the signature triplets (v1, r1, s1) (v2, r2, s2) ...
   // authorize a spend of this contract's funds to the given
   // destination address.
-  //purpose is uint8:
-  //0x00: normal send
-  //0x01: Compound supply
-  //0x02: Compound redeem
-  //0x03: Compound redeemUnderlying
   function _validSignature(address erc20Contract, address destination, uint256 value, uint8 purpose, uint8[] vs, bytes32[] rs, bytes32[] ss) private constant returns (bool) {
     require(vs.length == rs.length);
     require(rs.length == ss.length);
