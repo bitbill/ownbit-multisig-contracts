@@ -73,10 +73,10 @@ contract OwnbitMultiSig {
         _;
     }
   
-  /// @dev Contract constructor sets initial owners and required number of confirmations.
+    /// @dev Contract constructor sets initial owners and required number of confirmations.
     /// @param _owners List of initial owners.
     /// @param _required Number of required confirmations.
-    function OwnbitMultiSig(address[] _owners, uint _required) public validRequirement(_owners.length, _required) {
+    constructor(address[] _owners, uint _required) public validRequirement(_owners.length, _required) {
         for (uint i=0; i<_owners.length; i++) {
             if (isOwner[_owners[i]] || _owners[i] == 0)
                 throw;
@@ -89,7 +89,7 @@ contract OwnbitMultiSig {
 
     // The fallback function for this contract.
     function() public payable {
-        Funded(this.balance);
+        emit Funded(address(this).balance);
     }
   
     /// @dev Returns list of owners.
@@ -130,7 +130,7 @@ contract OwnbitMultiSig {
     spendNonce = spendNonce + 1;
     //transfer will throw if fails
     destination.transfer(value);
-    Spent(destination, value);
+    emit Spent(destination, value);
   }
   
   // @erc20contract: the erc20 contract address.
@@ -146,11 +146,11 @@ contract OwnbitMultiSig {
     spendNonce = spendNonce + 1;
     // transfer the tokens from the sender to this contract
     Erc20(erc20contract).transfer(destination, value);
-    SpentERC20(erc20contract, destination, value);
+    emit SpentErc20(erc20contract, destination, value);
   }
   
-  function supplyEthToCompound(address payable _cEtherContract, uint256 value, uint8[] vs, bytes32[] rs, bytes32[] ss) public payable returns (bool) {
-        require(_validSignature(0x0000000000000000000000000000000000000000, _cEtherContract, 0x01, value, vs, rs, ss));
+  function supplyEthToCompound(address _cEtherContract, uint256 value, uint8[] vs, bytes32[] rs, bytes32[] ss) public payable returns (bool) {
+        require(_validSignature(0x0000000000000000000000000000000000000000, _cEtherContract, value, 0x01, vs, rs, ss));
         spendNonce = spendNonce + 1;
         // Create a reference to the corresponding cToken contract
         CEth cToken = CEth(_cEtherContract);
