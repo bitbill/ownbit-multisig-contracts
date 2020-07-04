@@ -156,32 +156,33 @@ contract OwnbitMultiSig {
   //0x02: Compound supply ERC20
   //0x03: Compound redeem ETH
   //0x04: Compound redeem ERC20
-    //for ETH, 0x0000000000000000000000000000000000000000 is passed as _erc20Contract
-    function compoundAction(address _erc20Contract, address _cErc20Contract, uint256 value, uint8 purpose, uint8[] vs, bytes32[] rs, bytes32[] ss) public {
-        require(_validSignature(0x0000000000000000000000000000000000000000, _cErc20Contract, value, purpose, vs, rs, ss));
+    //for ETH, 0x0000000000000000000000000000000000000000 is passed as erc20contract
+    //cErc20Contract is just like the destination
+    function compoundAction(address cErc20Contract, address erc20contract, uint256 value, uint8 purpose, uint8[] vs, bytes32[] rs, bytes32[] ss) public {
+        require(_validSignature(0x0000000000000000000000000000000000000000, cErc20Contract, value, purpose, vs, rs, ss));
         spendNonce = spendNonce + 1;
         
         if (purpose == 0x01) {
             //supply ETH
-            CEth cToken1 = CEth(_cErc20Contract);
+            CEth cToken1 = CEth(cErc20Contract);
             cToken1.mint.value(value).gas(250000)();
         } else if (purpose == 0x02) {
             //supply ERC20
             // Create a reference to the underlying asset contract, like DAI.
-            Erc20 underlying = Erc20(_erc20Contract);
+            Erc20 underlying = Erc20(erc20contract);
             // Create a reference to the corresponding cToken contract, like cDAI
-            CErc20 cToken2 = CErc20(_cErc20Contract);
+            CErc20 cToken2 = CErc20(cErc20Contract);
             // Approve transfer on the ERC20 contract
-            underlying.approve(_cErc20Contract, value);
+            underlying.approve(cErc20Contract, value);
             // Mint cTokens
             cToken2.mint(value);
         } else if (purpose == 0x03) {
             //redeem ETH
-            CEth cToken3 = CEth(_cErc20Contract);
+            CEth cToken3 = CEth(cErc20Contract);
             cToken3.redeem(value);
         } else if (purpose == 0x04) {
             //redeem ETH
-            CErc20 cToken4 = CErc20(_cErc20Contract);
+            CErc20 cToken4 = CErc20(cErc20Contract);
             cToken4.redeem(value);
         }
     }
