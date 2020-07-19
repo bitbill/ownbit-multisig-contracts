@@ -4,10 +4,9 @@ pragma solidity ^0.4.21;
 //
 // For 2-of-3 multisig, to authorize a spend, two signtures must be provided by 2 of the 3 owners.
 // To generate the message to be signed, provide the destination address and
-// spend amount (in wei) to the generateMessageToSignmethod.
+// spend amount (in wei) to the generateMessageToSign method.
 // The signatures must be provided as the (v, r, s) hex-encoded coordinates.
 // The S coordinate must be 0x00 or 0x01 corresponding to 0x1b and 0x1c, respectively.
-// See the test file for example inputs.
 //
 // WARNING: The generated message is only valid until the next spend is executed.
 //          after that, a new message will need to be calculated.
@@ -15,7 +14,7 @@ pragma solidity ^0.4.21;
 //
 // INFO: This contract is ERC20 compatible.
 // This contract can both receive ETH and ERC20 tokens.
-// NFT is not supported
+// Notice that NFT (ERC721/ERC1155) is not supported yet.
 // Add support for DeFi (Compound)
 
 interface Erc20 {
@@ -75,7 +74,7 @@ contract OwnbitMultiSig {
     /// @param _owners List of initial owners.
     /// @param _required Number of required confirmations.
     constructor(address[] _owners, uint _required) public validRequirement(_owners.length, _required) {
-        for (uint i=0; i<_owners.length; i++) {
+        for (uint i = 0; i < _owners.length; i++) {
             //onwer should be distinct, and non-zero
             if (isOwner[_owners[i]] || _owners[i] == 0) {
                 revert();
@@ -108,7 +107,7 @@ contract OwnbitMultiSig {
 
   // Generates the message to sign given the output destination address and amount.
   // includes this contract's address and a nonce for replay protection.
-  // One option to  independently verify: https://leventozturk.com/engineering/sha3/ and select keccak
+  // One option to independently verify: https://leventozturk.com/engineering/sha3/ and select keccak
   function generateMessageToSign(address erc20Contract, address destination, uint256 value) public constant returns (bytes32) {
     require(destination != address(this));
     //the sequence should match generateMultiSigV2 in JS
@@ -144,7 +143,7 @@ contract OwnbitMultiSig {
     //require(ERC20Interface(erc20contract).balanceOf(address(this)) >= value);
     require(_validSignature(erc20contract, destination, value, vs, rs, ss));
     spendNonce = spendNonce + 1;
-    // transfer the tokens from the sender to this contract
+    // transfer tokens from this contract to the destination address
     Erc20(erc20contract).transfer(destination, value);
     emit SpentErc20(erc20contract, destination, value);
   }
