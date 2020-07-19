@@ -217,7 +217,7 @@ contract OwnbitMultiSig {
     require(vs.length >= required);
     bytes32 message = _messageToRecover(erc20Contract, destination, value);
     address[] memory addrs = new address[](vs.length);
-    for (uint i=0; i<vs.length; i++) {
+    for (uint i = 0; i < vs.length; i++) {
         //recover the address associated with the public key from elliptic curve signature or return zero on error 
         addrs[i] = ecrecover(message, vs[i]+27, rs[i], ss[i]);
     }
