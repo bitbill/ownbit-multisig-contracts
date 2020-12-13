@@ -1,4 +1,11 @@
 # bitbill-multisig-contracts
+The latest version of Ownbit uses OwnbitMultiSigV4.sol.
+最新版本的 Ownbit 使用 OwnbitMultiSigV4.sol。
+Ownbitの最新バージョンは、OwnbitMultiSigV4.solを使用しています。
+Последняя версия Ownbit использует OwnbitMultiSigV4.sol.
+La última versión de Ownbit utiliza OwnbitMultiSigV4.sol.
+
+# versions
 
 OwnbitMultiSigV4.sol is the latest version (version 4) of ms contract used by Ownbit wallet (Ownbit iOS App version >= 4.24.2, Android App version >= 4.24.3).
 
