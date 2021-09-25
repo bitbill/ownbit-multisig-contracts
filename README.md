@@ -10,7 +10,7 @@ Ownbitの最新バージョンは、OwnbitMultiSigV4.sol（標準MultiSig）とO
 
 La última versión de Ownbit utiliza OwnbitMultiSigV4.sol (Standard MultiSig) y OwnbitMultiSigV5.sol (Accident Protection MultiSig).
 
-# versions
+# Versions
 
 OwnbitMultiSigV4.sol is the latest version of Standard MultiSig Contract used by Ownbit wallet.
 
@@ -21,6 +21,10 @@ old/Ownbit-MS-Compound.sol is version 3 of ms contract used by Ownbit wallet (Ow
 old/BitbillMultiSigEx9.sol is version 2 of ms contract used by Ownbit wallet.
 
 old/BitbillMultiSig9.sol is version 1 of ms contract used by Ownbit wallet.
+
+# Note
+
+(BSC) is for Binance Smart Chain. 
 
 ### Known issue
 
