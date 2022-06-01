@@ -13,8 +13,8 @@ pragma solidity ^0.4.26;
 //
 //
 // INFO: This contract is ERC20 compatible.
-// This contract can both receive ETH and ERC20 tokens.
-// Notice that NFT (ERC721/ERC1155) is not supported. But can be transferred out throught spendAny.
+// This contract can both receive ETH, ERC20 and NFT (ERC721/ERC1155) tokens.
+// Notice that NFT (ERC721/ERC1155) is not yet supported in Ownbit app front-end. But it can be transferred out throught spendAny.
 // Last update time: 2021-09-06.
 // version for BEP20 (BSC)
 
