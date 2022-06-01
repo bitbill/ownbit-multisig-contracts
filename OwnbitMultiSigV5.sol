@@ -13,10 +13,8 @@ pragma solidity ^0.4.26;
 //
 //
 // INFO: This contract is ERC20 compatible.
-// This contract can both receive ETH and ERC20 tokens.
-// Notice that NFT (ERC721/ERC1155) is not supported. But can be transferred out throught spendAny.
-// Last update time: 2020-12-21.
-// copyright @ ownbit.io
+// This contract can both receive ETH, ERC20 and NFT (ERC721/ERC1155) tokens.
+// Notice that NFT (ERC721/ERC1155) is not yet supported in Ownbit app front-end. But it can be transferred out throught spendAny.
 //
 // Accident Protection MultiSig, rules:
 //
@@ -24,6 +22,8 @@ pragma solidity ^0.4.26;
 // Not submitting any transaction within 3,000,000 ETH blocks (roughly 416 days) will be treated as wallet lost (i.e. accident happened), 
 // other participants can still spend the assets as along as: valid signing count >= Min(mininual required count, active owners).
 //
+// Last update time: 2020-12-21.
+// Copyright @ ownbit.io
 
 interface Erc20 {
   function approve(address, uint256) public;
