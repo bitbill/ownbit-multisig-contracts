@@ -10,7 +10,7 @@ OwnbitMultiSigV7.sol is the latest versioin of Accident Protection MultiSig Cont
 
 OwnbitMultiSigV4.sol is the version of Standard MultiSig Contract used by Ownbit wallet (Ownbit App version >= 4.25 and <= 4.37.1).
 
-OwnbitMultiSigV5.sol is the versioin of Accident Protection MultiSig Contract used by Ownbit wallet (Ownbit App version >= 4.25 and <= 4.37.1).
+OwnbitMultiSigV5.sol is the version of Accident Protection MultiSig Contract used by Ownbit wallet (Ownbit App version >= 4.25 and <= 4.37.1).
 
 old/Ownbit-MS-Compound.sol is version 3 of ms contract used by Ownbit wallet (Ownbit iOS App version <= 4.24.1, Android App version <= 4.24.2).
 
