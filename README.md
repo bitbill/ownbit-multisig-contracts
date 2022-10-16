@@ -1,6 +1,6 @@
 # bitbill-multisig-contracts
 
-The latest version of Ownbit uses OwnbitMultiSigV5.sol (Standard MultiSig) and OwnbitMultiSigV7.sol (Accident Protection MultiSig).
+The latest version of Ownbit uses OwnbitMultiSigV6.sol (Standard MultiSig) and OwnbitMultiSigV7.sol (Accident Protection MultiSig).
 
 # Versions
 
