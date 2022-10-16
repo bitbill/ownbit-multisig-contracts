@@ -21,6 +21,7 @@ old/BitbillMultiSig9.sol is version 1 of ms contract used by Ownbit wallet.
 # Note
 
 (BSC) is for Binance Smart Chain. 
+
 (AVAX) is for Avalanche-C chain.
 
 ### Known issue
