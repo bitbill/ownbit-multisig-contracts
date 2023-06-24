@@ -8,7 +8,7 @@ OwnbitMultiSigV6.sol is the latest version of Standard MultiSig Contract used by
 
 OwnbitMultiSigV8.sol is the latest versioin of Accident Protection MultiSig Contract(Use block.timestamp)(Ownbit App version >= 4.41).
 
-OwnbitMultiSigV7.sol is the versioin of Accident Protection MultiSig Contract(Use block.blocknumber)(Ownbit App version >= 4.38 and <= 4.40).
+OwnbitMultiSigV7.sol is the versioin of Accident Protection MultiSig Contract(Use block.number)(Ownbit App version >= 4.38 and <= 4.40).
 
 OwnbitMultiSigV4.sol is the version of Standard MultiSig Contract(Ownbit App version >= 4.25 and <= 4.37.1).
 
