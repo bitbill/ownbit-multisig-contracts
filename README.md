@@ -24,7 +24,7 @@ old/BitbillMultiSig9.sol is version 1 of ms contract used by Ownbit wallet.
 
 (BSC) is for Binance Smart Chain. 
 
-(Arbitrum) is for Arbitrum One network.
+(ARB) is for Arbitrum One.
 
 ### Known issue
 
