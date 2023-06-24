@@ -1,18 +1,20 @@
 # ownbit-multisig-contracts
 
-The latest version of Ownbit uses OwnbitMultiSigV6.sol (Standard MultiSig) and OwnbitMultiSigV7.sol (Accident Protection MultiSig).
+The latest version of Ownbit uses OwnbitMultiSigV6.sol (Standard MultiSig) and OwnbitMultiSigV8.sol (Accident Protection MultiSig).
 
 # Versions
 
 OwnbitMultiSigV6.sol is the latest version of Standard MultiSig Contract used by Ownbit wallet (Ownbit App version >= 4.38).
 
-OwnbitMultiSigV7.sol is the latest versioin of Accident Protection MultiSig Contract used by Ownbit wallet (Ownbit App version >= 4.38).
+OwnbitMultiSigV8.sol is the latest versioin of Accident Protection MultiSig Contract(Use block.timestamp)(Ownbit App version >= 4.41).
 
-OwnbitMultiSigV4.sol is the version of Standard MultiSig Contract used by Ownbit wallet (Ownbit App version >= 4.25 and <= 4.37.1).
+OwnbitMultiSigV7.sol is the versioin of Accident Protection MultiSig Contract(Use block.timestamp)(Ownbit App version >= 4.38 and <= 4.40).
 
-OwnbitMultiSigV5.sol is the version of Accident Protection MultiSig Contract used by Ownbit wallet (Ownbit App version >= 4.25 and <= 4.37.1).
+OwnbitMultiSigV4.sol is the version of Standard MultiSig Contract(Ownbit App version >= 4.25 and <= 4.37.1).
 
-old/Ownbit-MS-Compound.sol is version 3 of ms contract used by Ownbit wallet (Ownbit iOS App version <= 4.24.1, Android App version <= 4.24.2).
+OwnbitMultiSigV5.sol is the version of Accident Protection MultiSig Contract(Ownbit App version >= 4.25 and <= 4.37.1).
+
+old/Ownbit-MS-Compound.sol is version 3 of ms contract(Ownbit iOS App version <= 4.24.1, Android App version <= 4.24.2).
 
 old/BitbillMultiSigEx9.sol is version 2 of ms contract used by Ownbit wallet.
 
@@ -22,7 +24,7 @@ old/BitbillMultiSig9.sol is version 1 of ms contract used by Ownbit wallet.
 
 (BSC) is for Binance Smart Chain. 
 
-(AVAX) is for Avalanche-C chain.
+(Arbitrum) is for Arbitrum One network.
 
 ### Known issue
 
