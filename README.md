@@ -26,5 +26,8 @@ old/BitbillMultiSig9.sol is version 1 of ms contract used by Ownbit wallet.
 
 (ARB) is for Arbitrum One.
 
+(SOL) Ownbit Solana MultiSig program Id: JCdDLzhavKvHgGEfBnQQmFDSwFfe1JKW7j7NVgCti5Ny
+Source code is under ownbit-solana-multisig directory.
+
 ### Known issue
 
