@@ -2,7 +2,7 @@ pragma solidity >=0.8.0 <0.9.0;
 
 // Proxy Contract
 contract OwnbitMultiSigProxy {
-    address public constant implementation = 0x95Ca2f7959f8848795dFB0868C1b0c59Dd4E9330; //ETH v6
+    //address public constant implementation = 0x95Ca2f7959f8848795dFB0868C1b0c59Dd4E9330; //ETH v6
     //address public constant implementation = 0x89e816865646d5a88a8F38518a3964a6C31ae5F4; //ETH v8
 
     //address public constant implementation = 0x9EEC8fEB5FA0AC2040c8D924ec97E363B199bf13; //BSC v6
@@ -13,6 +13,9 @@ contract OwnbitMultiSigProxy {
 
     //address public constant implementation = 0xDA627E231aC2F74ad120D3D55d5699bF95583825; //POLYGON v6
     //address public constant implementation = 0x0ed8D552968319f1038C4baA827DEF45c2e0817e; //POLYGON v8
+
+    address public constant implementation = 0xDC6F2BED9E5dE58a511DB4EAa11b10F075e8394C; //ARB v6
+    //address public constant implementation = 0x88d9Ad7f36077e2096Ab48547a65a10fAFC2ADBC; //ARB v8
     
 
     constructor(address[] memory _owners, uint _required) {
@@ -32,5 +35,4 @@ contract OwnbitMultiSigProxy {
         }
     }
 }
-
 
