@@ -1,5 +1,7 @@
 # ownbit-multisig-contracts
 
+Now latest enterprise version uses OwnbitMultiSigProxy(V20).sol & OwnbitMultiSigImplementation(V20).sol
+
 Now latest version uses OwnbitMultiSig_Proxy.sol
 
 #The latest version of Ownbit uses OwnbitMultiSigV6.sol (Standard MultiSig) and OwnbitMultiSigV8.sol (Accident Protection MultiSig).
