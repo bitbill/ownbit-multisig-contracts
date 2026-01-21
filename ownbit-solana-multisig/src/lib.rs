@@ -4,7 +4,7 @@ use anchor_lang::solana_program::instruction::Instruction;
 use std::convert::Into;
 use std::ops::Deref;
 
-declare_id!("JCdDLzhavKvHgGEfBnQQmFDSwFfe1JKW7j7NVgCti5Ny");
+declare_id!("7uPTVnLrNM9bAdCGrfckz1ugJeRs5bEGcEgcwzPuFsAK");
 
 // 导入 ErrorCode 宏
 #[error_code]
@@ -15,6 +15,8 @@ pub enum ErrorCode {
     InvalidOwnersLen,
     #[msg("Not enough owners signed this transaction.")]
     NotEnoughSigners,
+    #[msg("Invalid nonce.")]
+    InvalidNonce,
     #[msg("Cannot delete a transaction that has been signed by an owner.")]
     TransactionAlreadySigned,
     #[msg("Overflow when adding.")]
@@ -27,6 +29,10 @@ pub enum ErrorCode {
     InvalidThreshold,
     #[msg("Owners must be unique")]
     UniqueOwners,
+    #[msg("The number of accounts provided does not match the transaction.")]
+    InvalidAccountLength,
+    #[msg("The provided account does not match the transaction's expected account.")]
+    AccountMismatch,
 }
 
 
@@ -47,6 +53,10 @@ pub mod ownbit_multisig {
             ErrorCode::InvalidThreshold
         );
         require!(!owners.is_empty(), ErrorCode::InvalidOwnersLen);
+
+        // check nonce
+        let (pda, bump) = Pubkey::find_program_address(&[ctx.accounts.multisig.key().as_ref()], ctx.program_id);
+        require!(nonce == bump, ErrorCode::InvalidNonce); 
 
         let multisig = &mut ctx.accounts.multisig;
         multisig.owners = owners;
@@ -119,6 +129,24 @@ pub mod ownbit_multisig {
         if sig_count < ctx.accounts.multisig.threshold {
             return Err(ErrorCode::NotEnoughSigners.into());
         }
+
+        // remaining_accounts check
+    let accounts_info = ctx.remaining_accounts; // 传入的实际运行账户
+    let transaction_accounts = &ctx.accounts.transaction.accounts; // 数据库存的合法账户
+
+    // 1. 校验账户数量
+    require!(
+        accounts_info.len() == transaction_accounts.len(),
+        ErrorCode::InvalidAccountLength 
+    );
+
+    // 2. 严格校验每一个账户的 Pubkey 是否与创建交易时录入的一致
+    for (i, acc_info) in accounts_info.iter().enumerate() {
+        require!(
+            acc_info.key == &transaction_accounts[i].pubkey,
+            ErrorCode::AccountMismatch 
+        );
+    }
 
         // 执行交易。
         let mut ix: Instruction = (*ctx.accounts.transaction).deref().into();
